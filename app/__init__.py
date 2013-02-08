@@ -24,7 +24,7 @@ assets.init_app(app)
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        if redis.llen(config.MESSAGES_KEY) > 0:
+        if redis.llen(config.MESSAGES_KEY):
             flash('Task is already running', 'error')
         else:
             tail.delay()
@@ -42,7 +42,6 @@ def socketio(remaining):
 
 @celery.task
 def tail():
-    print 'doin in'
     for i in range(0, 20):
         msg = 'Task message %s\n' % i
         redis.rpush(config.MESSAGES_KEY, msg)
@@ -64,5 +63,4 @@ class TailNamespace(BaseNamespace):
                 self.emit(config.SOCKETIO_CHANNEL, m['data'])
 
     def on_subscribe(self):
-        print 'on subscribe'
         self.spawn(self.listener)
