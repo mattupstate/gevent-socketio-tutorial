@@ -1,0 +1,3 @@
+[submodule "cookbooks/redisio"]
+	path = cookbooks/redisio
+	url = https://github.com/brianbianco/redisio.git
