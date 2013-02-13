@@ -1,0 +1,5 @@
+# gevent-socketio-tutorial
+
+A basic application that illustrates how to push long running task output to the browser. The related tutorial can be found here:
+
+http://mattupstate.github.com/python/html5/2013/02/13/tailing-celery-task-output-to-browser-using-gevent-socketio-and-redis-pub-sub.html
