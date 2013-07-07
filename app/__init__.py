@@ -11,7 +11,6 @@ from assets import assets
 import config
 
 redis = StrictRedis(host=config.REDIS_HOST)
-pubsub = redis.pubsub()
 
 celery = Celery(__name__)
 celery.config_from_object(config)
@@ -56,11 +55,12 @@ class TailNamespace(BaseNamespace):
         messages = redis.lrange(config.MESSAGES_KEY, 0, -1)
         self.emit(config.SOCKETIO_CHANNEL, ''.join(messages))
 
-        pubsub.subscribe(config.CHANNEL_NAME)
+        self.pubsub.subscribe(config.CHANNEL_NAME)
 
-        for m in pubsub.listen():
+        for m in self.pubsub.listen():
             if m['type'] == 'message':
                 self.emit(config.SOCKETIO_CHANNEL, m['data'])
 
     def on_subscribe(self):
+        self.pubsub = redis.pubsub()
         self.spawn(self.listener)
